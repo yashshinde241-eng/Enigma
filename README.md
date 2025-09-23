@@ -18,6 +18,21 @@ A simple, encrypted C++ chat backend built for an Object-Oriented Programming pr
 ## Project Structure
 The core logic of the application is built around two main classes:
 
+## API Endpoints
+
+### `POST /register`
+Registers a new user.
+- **Request Body:** `{"username": "your_username", "password": "your_password"}`
+- **Success Response:** `201 Created`
+- **Failure Response:** `409 Conflict` if user exists, `400 Bad Request` if data is invalid.
+
+### `POST /login`
+Logs in an existing user.
+- **Request Body:** `{"username": "your_username", "password": "your_password"}`
+- **Success Response:** `200 OK`
+- **Failure Response:** `401 Unauthorized` for wrong password, `404 Not Found` for non-existent user.
+
+
 - **`User` Class:** Represents a user of the service. It encapsulates the `username` and a hashed `password`, providing the basic structure for user authentication.
 - **`Message` Class:** Represents a single message sent between users. It contains the message `content`, the `sender`'s username, and the `recipient`'s username.
 

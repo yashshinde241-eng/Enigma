@@ -1,0 +1,54 @@
+// Register test
+### Test 1: Register a new user (should succeed)
+POST http://localhost:18080/register
+Content-Type: application/json
+
+{
+    "username": "yash",
+    "password": "password123"
+}
+
+### Test 2: Try to register the SAME user again (should fail)
+POST http://localhost:18080/register
+Content-Type: application/json
+
+{
+    "username": "yash",
+    "password": "anotherpassword"
+}
+
+### Test 3: Send a request with a missing password (should fail)
+POST http://localhost:18080/register
+Content-Type: application/json
+
+{
+    "username": "yash"
+}
+
+// Login test
+### Test 4: Log in with correct details (should succeed)
+POST http://localhost:18080/login
+Content-Type: application/json
+
+{
+    "username": "yash",
+    "password": "password123"
+}
+
+### Test 5: Log in with wrong password (should fail)
+POST http://localhost:18080/login
+Content-Type: application/json
+
+{
+    "username": "yash",
+    "password": "wrongpassword"
+}
+
+### Test 6: Log in with a user that doesn't exist (should fail)
+POST http://localhost:18080/login
+Content-Type: application/json
+
+{
+    "username": "notauser",
+    "password": "password123"
+}
