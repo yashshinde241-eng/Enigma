@@ -3,8 +3,8 @@
 A simple, encrypted C++ chat backend built for an Object-Oriented Programming project. This project is developed following a 6-day plan, focusing on clean code, modern C++, and professional development practices.
 
 ## Features
-- [ ] User registration and login
-- [ ] Direct, ephemeral messaging
+- [x] User registration and login
+- [x] Direct, ephemeral messaging with file-based persistence
 - [ ] Simple Caesar cipher encryption for all messages
 
 ## Tech Stack
@@ -18,23 +18,36 @@ A simple, encrypted C++ chat backend built for an Object-Oriented Programming pr
 ## Project Structure
 The core logic of the application is built around two main classes:
 
+- **`User` Class:** Represents a user of the service. It encapsulates the `username`, a hashed `password`, and a message `inbox`.
+- **`Message` Class:** Represents a single message sent between users. It contains the message `content`, the `sender`'s username, and the `recipient`'s username.
+
 ## API Endpoints
 
-### `POST /register`
+### User Management
+#### `POST /register`
 Registers a new user.
 - **Request Body:** `{"username": "your_username", "password": "your_password"}`
 - **Success Response:** `201 Created`
 - **Failure Response:** `409 Conflict` if user exists, `400 Bad Request` if data is invalid.
 
-### `POST /login`
+#### `POST /login`
 Logs in an existing user.
 - **Request Body:** `{"username": "your_username", "password": "your_password"}`
 - **Success Response:** `200 OK`
 - **Failure Response:** `401 Unauthorized` for wrong password, `404 Not Found` for non-existent user.
 
+### Messaging
+#### `POST /send`
+Sends a message from one user to another.
+- **Request Body:** `{"sender": "sender_username", "recipient": "recipient_username", "content": "your message"}`
+- **Success Response:** `200 OK`
+- **Failure Response:** `404 Not Found` if recipient does not exist.
 
-- **`User` Class:** Represents a user of the service. It encapsulates the `username` and a hashed `password`, providing the basic structure for user authentication.
-- **`Message` Class:** Represents a single message sent between users. It contains the message `content`, the `sender`'s username, and the `recipient`'s username.
+#### `GET /getMessages`
+Retrieves all unread messages for a user and then clears their inbox.
+- **URL Format:** `/getMessages?username=your_username`
+- **Success Response:** `200 OK` with a JSON array of messages.
+- **Failure Response:** `404 Not Found` if user does not exist.
 
 ## Getting Started
 

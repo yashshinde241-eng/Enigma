@@ -1,23 +1,34 @@
-/*It's a special instruction to the compiler to ensure this file is only included 
-once during the build process, which prevents redefinition errors.*/
 #pragma once
 
 #include <string>
+#include <vector>
+#include <nlohmann/json.hpp> // <-- ADD THIS LINE
+#include "Message.hpp"
 
-// Use the standard namespace to avoid writing "std::" repeatedly
 using namespace std;
+using json = nlohmann::json; // <-- AND ADD THIS LINE
 
 class User {
 private:
-    // Member variables to store user data
     string username_;
     string password_hash_;
+    vector<Message> inbox_;
 
 public:
-    // Constructor to create a new User object
+    // Constructor
     User(const string& username, const string& password);
 
-    // Getter methods to access private data safely
+    // Getters
     string getUsername() const;
     string getPasswordHash() const;
+
+    void receiveMessage(const Message& msg);
+
+    // Functions for JSON serialization
+    void toJson(json& j) const;
+    static User fromJson(const json& j);
+
+    // ... inside the User class public section ...
+    vector<Message>& getInbox();
+    void clearInbox();
 };

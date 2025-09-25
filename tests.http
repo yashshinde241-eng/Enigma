@@ -52,3 +52,55 @@ Content-Type: application/json
     "username": "notauser",
     "password": "password123"
 }
+
+# --- Messaging Tests ---
+
+### Test 7: Register two new users for messaging
+# @name registerUserA
+POST http://localhost:18080/register
+Content-Type: application/json
+
+{
+    "username": "userA",
+    "password": "passwordA"
+}
+
+###
+# @name registerUserB
+POST http://localhost:18080/register
+Content-Type: application/json
+
+{
+    "username": "userB",
+    "password": "passwordB"
+}
+
+
+### Test 8: userA sends a message to userB (should succeed)
+POST http://localhost:18080/send
+Content-Type: application/json
+
+{
+    "sender": "userA",
+    "recipient": "userB",
+    "content": "Hello userB, this is a test!"
+}
+
+
+### Test 9: userB retrieves their messages (should show 1 message)
+GET http://localhost:18080/getMessages?username=userB
+
+
+### Test 10: userB retrieves messages again (should be empty now)
+GET http://localhost:18080/getMessages?username=userB
+
+
+### Test 11: userA tries to send a message to a non-existent user (should fail)
+POST http://localhost:18080/send
+Content-Type: application/json
+
+{
+    "sender": "userA",
+    "recipient": "userC",
+    "content": "Are you there?"
+}

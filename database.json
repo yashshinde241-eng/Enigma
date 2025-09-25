@@ -1,0 +1,10 @@
+[
+    {
+        "password_hash": "passwordA_hashed",
+        "username": "userA"
+    },
+    {
+        "password_hash": "passwordB_hashed",
+        "username": "userB"
+    }
+]
