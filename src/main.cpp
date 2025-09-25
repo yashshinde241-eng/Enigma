@@ -61,6 +61,15 @@ int main() {
             string username = data.at("username");
             string password = data.at("password");
 
+            if (username.empty() || password.empty()) {
+                res.status = 400; // Bad Request
+                response_json["status"] = "error";
+                response_json["message"] = "Username and password cannot be empty.";
+                res.set_content(response_json.dump(), "application/json");
+                return;
+            }
+            
+            // Check if username already exists
             for (const auto& user : users) {
                 if (user.getUsername() == username) {
                     res.status = 409; // Conflict

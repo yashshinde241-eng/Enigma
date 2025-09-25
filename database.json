@@ -5,14 +5,13 @@
         "username": "userA"
     },
     {
-        "inbox": [
-            {
-                "encrypted_content": "Khoor xvhuE, wklv lv d whvw!",
-                "recipient": "userB",
-                "sender": "userA"
-            }
-        ],
+        "inbox": [],
         "password_hash": "passwordB_hashed",
         "username": "userB"
+    },
+    {
+        "inbox": [],
+        "password_hash": "password123_hashed",
+        "username": ""
     }
 ]
