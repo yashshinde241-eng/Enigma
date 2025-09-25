@@ -1,9 +1,17 @@
 [
     {
+        "inbox": [],
         "password_hash": "passwordA_hashed",
         "username": "userA"
     },
     {
+        "inbox": [
+            {
+                "encrypted_content": "Khoor xvhuE, wklv lv d whvw!",
+                "recipient": "userB",
+                "sender": "userA"
+            }
+        ],
         "password_hash": "passwordB_hashed",
         "username": "userB"
     }

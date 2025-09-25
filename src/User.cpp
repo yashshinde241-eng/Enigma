@@ -1,4 +1,5 @@
 #include "User.hpp"
+#include "Message.hpp"
 
 // Constructor implementation
 User::User(const string& username, const string& password) 
@@ -20,7 +21,18 @@ string User::getPasswordHash() const {
 
 // Convert User object to JSON
 void User::toJson(json& j) const {
-    j = json{{"username", username_}, {"password_hash", password_hash_}};
+    json inbox_json = json::array();
+    for (const auto& msg : inbox_) {
+        json msg_json;
+        msg.toJson(msg_json);
+        inbox_json.push_back(msg_json);
+    }
+
+    j = json{
+        {"username", username_}, 
+        {"password_hash", password_hash_},
+        {"inbox", inbox_json} // <-- ADD THIS
+    };
 }
 
 // Create User object from JSON
@@ -28,10 +40,15 @@ User User::fromJson(const json& j) {
     string username = j.at("username").get<string>();
     string password_hash = j.at("password_hash").get<string>();
 
-    // We need a way to create a User without re-hashing the password
-    // Let's create a temporary User and then set the hash directly
-    User user(username, ""); // Create with a dummy password
-    user.password_hash_ = password_hash; // Directly set the stored hash
+    User user(username, ""); 
+    user.password_hash_ = password_hash; 
+
+    // Load messages from the inbox, if it exists
+    if (j.contains("inbox")) {
+        for (const auto& msg_json : j.at("inbox")) {
+            user.inbox_.push_back(Message::fromJson(msg_json));
+        }
+    }
     return user;
 }
 
