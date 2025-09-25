@@ -1,0 +1,3 @@
+C:/Users/LOQ/OneDrive/Desktop/OOP Project SY SEM !/Enigma/build/CMakeFiles/enigma_server.dir
+C:/Users/LOQ/OneDrive/Desktop/OOP Project SY SEM !/Enigma/build/CMakeFiles/ALL_BUILD.dir
+C:/Users/LOQ/OneDrive/Desktop/OOP Project SY SEM !/Enigma/build/CMakeFiles/ZERO_CHECK.dir

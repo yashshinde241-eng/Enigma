@@ -1,0 +1,29 @@
+/* Basic reset and full-page setup */
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: sans-serif; /* We'll add custom fonts tomorrow */
+  background-color: #1a1a1a; /* Dark background */
+}
+
+/* The main container for our whole app */
+.enigma-container {
+  display: flex; /* This is the magic! It arranges children side-by-side. */
+  height: 100vh; /* Make the container take up the full browser window height. */
+  color: #f0f0f0; /* Light text color for contrast */
+}
+
+/* The left "Online Roster" panel */
+.roster-panel {
+  flex-basis: 280px; /* Set a fixed width for the roster */
+  flex-shrink: 0; /* Prevent this panel from shrinking */
+  background-color: #242424; /* A slightly lighter dark gray */
+  border-right: 2px solid #000;
+}
+
+/* The main chat area on the right */
+.chat-panel {
+  flex-grow: 1; /* This makes the chat panel take up all remaining space */
+  background-color: #313131; /* A light gray for the main area */
+}
