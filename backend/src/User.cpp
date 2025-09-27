@@ -68,7 +68,7 @@ User User::fromJson(const json& j) {
     user.password_hash_ = password_hash; 
     
     // Load online status, default to false if not present
-    user.is_online_ = j.value("is_online", false); 
+    user.is_online_ = false; 
 
     if (j.contains("inbox")) {
         for (const auto& msg_json : j.at("inbox")) {

@@ -1,7 +1,9 @@
 // --- 1. Constants and Global Variables ---
 const API_BASE_URL = 'http://localhost:18080';
-let currentRecipient = ''; // To keep track of who we are chatting with
+let currentRecipient = '';
 let loggedInUser = '';
+let pollingInterval;
+let conversations = {}; // Holds message history, e.g., {'userB': [msg1, msg2]}
 
 // --- 2. Get References to HTML Elements ---
 const userListContainer = document.getElementById('user-list');
@@ -13,20 +15,15 @@ const logoutBtn = document.getElementById('logout-btn');
 
 // --- 3. Main Setup Function ---
 function initialize() {
-    // Get the logged-in user from local storage
     loggedInUser = localStorage.getItem('enigma-username');
-
     if (!loggedInUser) {
-        // If no user is logged in, redirect back to the login page
         window.location.href = 'login.html';
         return;
     }
-
-    // Display the current user's name
     currentUserSpan.textContent = loggedInUser;
-
-    // Fetch all users for the roster
-    fetchAllUsers();
+    
+    // Initial data fetch
+    pollServer(); 
     
     // Set up event listeners
     addUserEventListeners();
@@ -36,33 +33,43 @@ function initialize() {
         if (event.key === 'Enter') sendMessage();
     });
 
-    // Start polling for new messages every 2 seconds
-    // setInterval(fetchMessages, 2000);
+    // Start polling for new data every 3 seconds
+    pollingInterval = setInterval(pollServer, 3000); 
 }
 
 // --- 4. Helper and Core Functions ---
+
+// Combined polling function
+async function pollServer() {
+    await fetchAllUsers();
+    await fetchMessages();
+}
+
 async function fetchAllUsers() {
     try {
         const response = await fetch(`${API_BASE_URL}/users`);
-        if (!response.ok) {
-            console.error("Failed to fetch users");
-            return;
-        }
+        if (!response.ok) return;
 
         const usernames = await response.json();
         
-        userListContainer.innerHTML = ''; // Clear any placeholder users
+        const displayedUsernames = new Set([...userListContainer.querySelectorAll('.user-plaque')].map(el => el.textContent));
+        const onlineUsernames = new Set(usernames);
 
-        usernames.forEach(username => {
-            if (username === loggedInUser) return; // Don't show self in roster
-
-            const userElement = document.createElement('div');
-            userElement.className = 'user-plaque rounded-lg p-2 text-center font-enigma';
-            userElement.textContent = username;
-            
-            userListContainer.appendChild(userElement);
+        displayedUsernames.forEach(username => {
+            if (!onlineUsernames.has(username)) {
+                const userToRemove = [...userListContainer.querySelectorAll('.user-plaque')].find(el => el.textContent === username);
+                if (userToRemove) userToRemove.remove();
+            }
         });
 
+        onlineUsernames.forEach(username => {
+            if (!displayedUsernames.has(username) && username !== loggedInUser) {
+                const userElement = document.createElement('div');
+                userElement.className = 'user-plaque rounded-lg p-2 text-center font-enigma';
+                userElement.textContent = username;
+                userListContainer.appendChild(userElement);
+            }
+        });
     } catch (error) {
         console.error("Error fetching users:", error);
     }
@@ -78,11 +85,15 @@ function addUserEventListeners() {
 
         clickedUser.classList.add('selected');
         currentRecipient = clickedUser.textContent;
+
+        // Display the conversation for the newly selected user
+        displayConversation(currentRecipient);
     });
 }
 
 function addLogoutEventListener() {
     logoutBtn.addEventListener('click', async () => {
+        clearInterval(pollingInterval);
         try {
             await fetch(`${API_BASE_URL}/logout`, {
                 method: 'POST',
@@ -102,7 +113,7 @@ async function sendMessage() {
     const content = messageInput.value.trim();
     if (!content) return;
     if (!currentRecipient) {
-        alert("Please select a user to message.");
+        alert("Please select a user to message first.");
         return;
     }
 
@@ -110,7 +121,7 @@ async function sendMessage() {
     messageInput.value = '';
 
     try {
-        await fetch(`${API_BASE_URL}/send`, {
+        const response = await fetch(`${API_BASE_URL}/send`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -119,25 +130,56 @@ async function sendMessage() {
                 content: content
             })
         });
+        if (!response.ok) {
+            console.error("Server failed to receive message.");
+        }
     } catch (error) {
-        console.error("Failed to send message:", error);
+        console.error("Error sending message:", error);
     }
 }
 
+// MODIFIED: Sorts messages into the 'conversations' object
 async function fetchMessages() {
     if (!loggedInUser) return;
-
     try {
         const response = await fetch(`${API_BASE_URL}/getMessages?username=${loggedInUser}`);
         if (!response.ok) return;
 
-        const messages = await response.json();
-        messages.forEach(msg => {
-            appendMessage(msg.content, msg.from, 'received');
+        const newMessages = await response.json();
+        let shouldUpdateDisplay = false;
+
+        newMessages.forEach(msg => {
+            const otherUser = msg.from === loggedInUser ? msg.recipient : msg.from;
+            if (!conversations[otherUser]) {
+                conversations[otherUser] = [];
+            }
+            conversations[otherUser].push(msg);
+
+            // If the new message is part of the currently viewed conversation, we should update
+            if (otherUser === currentRecipient) {
+                shouldUpdateDisplay = true;
+            }
         });
+
+        // Re-render the conversation if a new message arrived for it
+        if (shouldUpdateDisplay) {
+            displayConversation(currentRecipient);
+        }
+
     } catch (error) {
         console.error("Failed to fetch messages:", error);
     }
+}
+
+// NEW FUNCTION: Displays messages for a specific user
+function displayConversation(username) {
+    messageContainer.innerHTML = ''; // Clear the display
+    const history = conversations[username] || []; // Get history or an empty array
+
+    history.forEach(msg => {
+        const type = msg.from === loggedInUser ? 'sent' : 'received';
+        appendMessage(msg.content, msg.from, type);
+    });
 }
 
 function appendMessage(content, sender, type) {
