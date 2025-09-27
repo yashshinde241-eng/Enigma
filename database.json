@@ -1,7 +1,50 @@
 [
     {
         "inbox": [],
+        "is_online": false,
+        "password_hash": "pass890_hashed",
+        "username": "agent_x"
+    },
+    {
+        "inbox": [
+            {
+                "encrypted_content": "klll",
+                "recipient": "agent_y",
+                "sender": "agent_x"
+            }
+        ],
+        "is_online": false,
         "password_hash": "pass123_hashed",
         "username": "agent_y"
+    },
+    {
+        "inbox": [],
+        "is_online": false,
+        "password_hash": "pass321_hashed",
+        "username": "agent_z"
+    },
+    {
+        "inbox": [
+            {
+                "encrypted_content": "Klll",
+                "recipient": "x",
+                "sender": "y"
+            }
+        ],
+        "is_online": false,
+        "password_hash": "p1_hashed",
+        "username": "x"
+    },
+    {
+        "inbox": [],
+        "is_online": false,
+        "password_hash": "p2_hashed",
+        "username": "y"
+    },
+    {
+        "inbox": [],
+        "is_online": false,
+        "password_hash": "p3_hashed",
+        "username": "z"
     }
 ]

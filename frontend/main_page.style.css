@@ -1,32 +1,229 @@
 /* Custom font styles */
-body { font-family: 'Cutive Mono', monospace; background-color: #1a1a1a; background-image: url('https://www.transparenttextures.com/patterns/dark-leather.png'); overflow: hidden; }
-.font-enigma { font-family: 'Cutive Mono', monospace; }
-.enigma-frame { background: linear-gradient(145deg, #3a3a3a, #1a1a1a); box-shadow: inset 0 0 20px rgba(0,0,0,0.8), 0 0 35px rgba(0,0,0,0.6); position: relative; }
-.title-glow { color: #ffc857; /* Amber */ text-shadow: 0 0 5px #ffc857, 0 0 10px #ffc857, 0 0 20px #d49c2a, 0 0 30px #d49c2a; }
-.metal-panel { background-image: url('https://www.transparenttextures.com/patterns/gun-metal.png'), linear-gradient(145deg, #3c3c3c, #2a2a2a); border: 2px solid; border-color: #4a4a4a #111 #111 #4a4a4a; box-shadow: inset 0 0 15px rgba(0,0,0,0.8), 0 2px 4px rgba(0,0,0,0.4); position: relative; padding: 8px; }
-.inner-panel { background: #252525; box-shadow: inset 0 0 15px rgba(0,0,0,0.8); padding: 16px; height: 100%; width: 100%; display: flex; flex-direction: column; gap: 12px; }
-.panel-screw { position: absolute; width: 10px; height: 10px; border-radius: 50%; background: radial-gradient(circle at 3px 3px, #555, #111); box-shadow: inset 0 1px 1px rgba(0,0,0,0.8); }
-.panel-screw::after { content: ''; position: absolute; top: 4.5px; left: 2px; width: 6px; height: 1px; background: #000; transform: rotate(20deg); }
-.screw-tl { top: 8px; left: 8px; }
-.screw-tr { top: 8px; right: 8px; }
-.screw-bl { bottom: 8px; left: 8px; }
-.screw-br { bottom: 8px; right: 8px; }
-.panel-header { background: linear-gradient(145deg, #9c7b57, #6b5033); padding: 6px; text-align: center; color: #1a1a1a; font-weight: bold; text-shadow: 1px 1px 1px rgba(255, 223, 150, 0.4); box-shadow: inset 0 2px 5px rgba(0,0,0,0.5), 0 1px 1px rgba(255,255,255,0.1); }
-.user-plaque { background: linear-gradient(145deg, #7a5a36, #47331f); /* Darker brass */ border: 1px solid #3a2917; box-shadow: inset 0 0 5px rgba(0,0,0,0.6), 0 1px 1px rgba(0,0,0,0.4); transition: all 0.2s ease-in-out; cursor: pointer; color: rgba(255, 200, 87, 0.7); }
-.user-plaque:hover { background: linear-gradient(145deg, #8c6a46, #59422a); color: rgba(255, 200, 87, 1); }
-.user-plaque.selected { background: linear-gradient(145deg, #d4a26a, #a17949); /* Brighter brass */ color: #fff; box-shadow: inset 0 0 5px rgba(0,0,0,0.4), 0 0 10px #ffc857, 0 0 15px #ffc857; text-shadow: 0 0 4px rgba(0,0,0,0.5); }
-.inset-footer { background: #1a1a1a; box-shadow: inset 0 3px 5px rgba(0,0,0,0.8); border-top: 1px solid #0a0a0a; }
-.message-display { background-color: #111511; background-image: linear-gradient(rgba(180, 255, 180, .05) .1em, transparent .1em), linear-gradient(90deg, rgba(180, 255, 180, .05) .1em, transparent .1em); background-size: 1.5em 1.5em; box-shadow: inset 0 0 20px rgba(0,0,0,0.8); border: 2px solid #000; }
-.message-received { color: #c8e6c9; /* Light green CRT text */ text-shadow: 0 0 3px #9ccc65; }
-.message-sent { color: #ffc857; /* Amber */ font-weight: bold; text-shadow: 0 0 5px #d49c2a; }
-.encoder-input { background-color: #111; box-shadow: inset 0 4px 8px rgba(0,0,0,0.9); border: 1px solid #000; color: #ffc857; transition: all 0.2s ease; }
-.encoder-input::placeholder { color: rgba(255, 200, 87, 0.3); }
-.encoder-input:focus { outline: none; box-shadow: inset 0 4px 8px rgba(0,0,0,0.9), 0 0 8px #ffc857; }
-.encoder-input:disabled { background-color: #0a0a0a; cursor: not-allowed; }
-.send-button { background: linear-gradient(145deg, #d4a26a, #a17949); /* Brass */ border: 2px solid; border-color: #e6b884 #8c6a46 #8c6a46 #e6b884; box-shadow: 0 5px 10px rgba(0,0,0,0.6), inset 0 1px 1px rgba(255,255,255,0.2); color: #2a2a2a; font-weight: bold; transition: all 0.1s ease-out; }
-.send-button:active { transform: translateY(3px); box-shadow: 0 2px 5px rgba(0,0,0,0.6), inset 0 1px 1px rgba(255,255,255,0.2); background: linear-gradient(145deg, #c2935e, #946f42); }
-.shield-icon { filter: drop-shadow(0 0 5px #ffc857) drop-shadow(0 0 10px #d49c2a); stroke: #ffc857; stroke-width: 6; fill: none; height: 2.5rem; }
-#user-list::-webkit-scrollbar, #message-container::-webkit-scrollbar { width: 14px; }
-#user-list::-webkit-scrollbar-track, #message-container::-webkit-scrollbar-track { background: #1a1a1a; box-shadow: inset 0 2px 4px rgba(0,0,0,0.8); border-radius: 4px; }
-#user-list::-webkit-scrollbar-thumb, #message-container::-webkit-scrollbar-thumb { background: linear-gradient(145deg, #7a5a36, #47331f); border-radius: 4px; border: 1px solid #3a2917; box-shadow: inset 0 1px 1px rgba(255, 223, 150, 0.2); }
-#user-list::-webkit-scrollbar-thumb:hover, #message-container::-webkit-scrollbar-thumb:hover { background: linear-gradient(145deg, #8c6a46, #59422a); }
+body {
+  font-family: 'Cutive Mono', monospace;
+  background-color: #1a1a1a;
+  background-image: url('https://www.transparenttextures.com/patterns/dark-leather.png');
+  overflow: hidden;
+}
+
+.font-enigma {
+  font-family: 'Cutive Mono', monospace;
+}
+
+.enigma-frame {
+  background: linear-gradient(145deg, #3a3a3a, #1a1a1a);
+  box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.8), 0 0 35px rgba(0, 0, 0, 0.6);
+  position: relative;
+}
+
+.title-glow {
+  color: #ffc857;
+  /* Amber */
+  text-shadow: 0 0 5px #ffc857, 0 0 10px #ffc857, 0 0 20px #d49c2a, 0 0 30px #d49c2a;
+}
+
+.metal-panel {
+  background-image: url('https://www.transparenttextures.com/patterns/gun-metal.png'), linear-gradient(145deg, #3c3c3c, #2a2a2a);
+  border: 2px solid;
+  border-color: #4a4a4a #111 #111 #4a4a4a;
+  box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.8), 0 2px 4px rgba(0, 0, 0, 0.4);
+  position: relative;
+  padding: 8px;
+}
+
+.inner-panel {
+  background: #252525;
+  box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.8);
+  padding: 16px;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.panel-screw {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 3px 3px, #555, #111);
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.8);
+}
+
+.panel-screw::after {
+  content: '';
+  position: absolute;
+  top: 4.5px;
+  left: 2px;
+  width: 6px;
+  height: 1px;
+  background: #000;
+  transform: rotate(20deg);
+}
+
+.screw-tl {
+  top: 8px;
+  left: 8px;
+}
+
+.screw-tr {
+  top: 8px;
+  right: 8px;
+}
+
+.screw-bl {
+  bottom: 8px;
+  left: 8px;
+}
+
+.screw-br {
+  bottom: 8px;
+  right: 8px;
+}
+
+.panel-header {
+  background: linear-gradient(145deg, #9c7b57, #6b5033);
+  padding: 6px;
+  text-align: center;
+  color: #1a1a1a;
+  font-weight: bold;
+  text-shadow: 1px 1px 1px rgba(255, 223, 150, 0.4);
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.5), 0 1px 1px rgba(255, 255, 255, 0.1);
+}
+
+.user-plaque {
+  background: linear-gradient(145deg, #7a5a36, #47331f);
+  /* Darker brass */
+  border: 1px solid #3a2917;
+  box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.6), 0 1px 1px rgba(0, 0, 0, 0.4);
+  transition: all 0.2s ease-in-out;
+  cursor: pointer;
+  color: rgba(255, 200, 87, 0.7);
+}
+
+.user-plaque:hover {
+  background: linear-gradient(145deg, #8c6a46, #59422a);
+  color: rgba(255, 200, 87, 1);
+}
+
+.user-plaque.selected {
+  background: linear-gradient(145deg, #d4a26a, #a17949);
+  /* Brighter brass */
+  color: #fff;
+  box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.4), 0 0 10px #ffc857, 0 0 15px #ffc857;
+  text-shadow: 0 0 4px rgba(0, 0, 0, 0.5);
+}
+
+.inset-footer {
+  background: #1a1a1a;
+  box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.8);
+  border-top: 1px solid #0a0a0a;
+}
+
+.message-display {
+  background-color: #111511;
+  background-image: linear-gradient(rgba(180, 255, 180, .05) .1em, transparent .1em), linear-gradient(90deg, rgba(180, 255, 180, .05) .1em, transparent .1em);
+  background-size: 1.5em 1.5em;
+  box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.8);
+  border: 2px solid #000;
+}
+
+.message-received {
+  color: #c8e6c9;
+  /* Light green CRT text */
+  text-shadow: 0 0 3px #9ccc65;
+}
+
+.message-sent {
+  color: #ffc857;
+  /* Amber */
+  font-weight: bold;
+  text-shadow: 0 0 5px #d49c2a;
+}
+
+.encoder-input {
+  background-color: #111;
+  box-shadow: inset 0 4px 8px rgba(0, 0, 0, 0.9);
+  border: 1px solid #000;
+  color: #ffc857;
+  transition: all 0.2s ease;
+}
+
+.encoder-input::placeholder {
+  color: rgba(255, 200, 87, 0.3);
+}
+
+.encoder-input:focus {
+  outline: none;
+  box-shadow: inset 0 4px 8px rgba(0, 0, 0, 0.9), 0 0 8px #ffc857;
+}
+
+.encoder-input:disabled {
+  background-color: #0a0a0a;
+  cursor: not-allowed;
+}
+
+.send-button {
+  background: linear-gradient(145deg, #d4a26a, #a17949);
+  /* Brass */
+  border: 2px solid;
+  border-color: #e6b884 #8c6a46 #8c6a46 #e6b884;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.6), inset 0 1px 1px rgba(255, 255, 255, 0.2);
+  color: #2a2a2a;
+  font-weight: bold;
+  transition: all 0.1s ease-out;
+}
+
+.send-button:active {
+  transform: translateY(3px);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.6), inset 0 1px 1px rgba(255, 255, 255, 0.2);
+  background: linear-gradient(145deg, #c2935e, #946f42);
+}
+
+.shield-icon {
+  filter: drop-shadow(0 0 5px #ffc857) drop-shadow(0 0 10px #d49c2a);
+  stroke: #ffc857;
+  stroke-width: 6;
+  fill: none;
+  height: 2.5rem;
+}
+
+#user-list::-webkit-scrollbar,
+#message-container::-webkit-scrollbar {
+  width: 14px;
+}
+
+#user-list::-webkit-scrollbar-track,
+#message-container::-webkit-scrollbar-track {
+  background: #1a1a1a;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.8);
+  border-radius: 4px;
+}
+
+#user-list::-webkit-scrollbar-thumb,
+#message-container::-webkit-scrollbar-thumb {
+  background: linear-gradient(145deg, #7a5a36, #47331f);
+  border-radius: 4px;
+  border: 1px solid #3a2917;
+  box-shadow: inset 0 1px 1px rgba(255, 223, 150, 0.2);
+}
+
+#user-list::-webkit-scrollbar-thumb:hover,
+#message-container::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(145deg, #8c6a46, #59422a);
+}
+
+.logout-button {
+  background: linear-gradient(145deg, #5a5a5a, #3a3a3a);
+  border: 1px solid #2a2a2a;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.1);
+  color: #aaa;
+  transition: all 0.1s ease-out;
+}
+
+.logout-button:active {
+  background: linear-gradient(145deg, #4a4a4a, #2a2a2a);
+  transform: translateY(1px);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.1);
+}

@@ -31,13 +31,17 @@ void saveUsersToFile() {
 void loadUsersFromFile() {
     ifstream file("database.json");
     if (file.is_open()) {
-        if (file.peek() != ifstream::traits_type::eof()) { // Check if file is not empty
-            json user_list_json;
-            file >> user_list_json;
-            users.clear();
-            for (const auto& user_json : user_list_json) {
-                users.push_back(User::fromJson(user_json));
+        try {
+            if (file.peek() != ifstream::traits_type::eof()) {
+                json user_list_json;
+                file >> user_list_json;
+                users.clear();
+                for (const auto& user_json : user_list_json) {
+                    users.push_back(User::fromJson(user_json));
+                }
             }
+        } catch (const json::parse_error& e) {
+            cout << "Could not parse database.json: " << e.what() << endl;
         }
         cout << "Loaded " << users.size() << " users from database.json" << endl;
     }
@@ -117,25 +121,21 @@ int main() {
             string username = data.at("username");
             string password = data.at("password");
 
-            for (const auto& user : users) {
+            for (auto& user : users) {
                 if (user.getUsername() == username) {
                     if (user.getPasswordHash() == (password + "_hashed")) {
+                        user.setOnline(true);
+                        saveUsersToFile();
                         res.status = 200;
                         response_json["status"] = "success";
                         response_json["message"] = "Login successful.";
-                        res.set_content(response_json.dump(), "application/json");
-                        return;
-                    } else {
-                        res.status = 401;
-                        response_json["status"] = "error";
-                        response_json["message"] = "Invalid username or password.";
                         res.set_content(response_json.dump(), "application/json");
                         return;
                     }
                 }
             }
             
-            res.status = 404;
+            res.status = 401;
             response_json["status"] = "error";
             response_json["message"] = "Invalid username or password.";
             res.set_content(response_json.dump(), "application/json");
@@ -148,14 +148,45 @@ int main() {
         }
     });
     
-    // Endpoint to get a list of all usernames
+    // Endpoint to get a list of all ONLINE usernames
     svr.Get("/users", [&](const httplib::Request &, httplib::Response &res) {
         res.set_header("Access-Control-Allow-Origin", "*");
         json user_list = json::array();
         for(const auto& user : users) {
-            user_list.push_back(user.getUsername());
+            if (user.isOnline()) {
+                user_list.push_back(user.getUsername());
+            }
         }
         res.set_content(user_list.dump(), "application/json");
+    });
+
+    // NEW ENDPOINT: User logout
+    svr.Post("/logout", [&](const httplib::Request &req, httplib::Response &res){
+        res.set_header("Access-Control-Allow-Origin", "*");
+        json response_json;
+        try {
+            json data = json::parse(req.body);
+            string username = data.at("username");
+
+            for (auto& user : users) {
+                if (user.getUsername() == username) {
+                    user.setOnline(false);
+                    saveUsersToFile();
+                    break;
+                }
+            }
+            
+            res.status = 200;
+            response_json["status"] = "success";
+            response_json["message"] = "Logout successful.";
+            res.set_content(response_json.dump(), "application/json");
+
+        } catch (const exception& e) {
+            res.status = 400;
+            response_json["status"] = "error";
+            response_json["message"] = "Invalid request format.";
+            res.set_content(response_json.dump(), "application/json");
+        }
     });
 
     // Endpoint to send a message
