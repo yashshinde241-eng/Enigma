@@ -31,11 +31,13 @@ void saveUsersToFile() {
 void loadUsersFromFile() {
     ifstream file("database.json");
     if (file.is_open()) {
-        json user_list_json;
-        file >> user_list_json;
-
-        for (const auto& user_json : user_list_json) {
-            users.push_back(User::fromJson(user_json));
+        if (file.peek() != ifstream::traits_type::eof()) { // Check if file is not empty
+            json user_list_json;
+            file >> user_list_json;
+            users.clear();
+            for (const auto& user_json : user_list_json) {
+                users.push_back(User::fromJson(user_json));
+            }
         }
         cout << "Loaded " << users.size() << " users from database.json" << endl;
     }
@@ -47,14 +49,24 @@ int main() {
 
     httplib::Server svr;
 
-    // --- API Endpoints ---
+    // --- Manually handle OPTIONS requests for CORS preflight ---
+    svr.Options("/(.*)", [](const httplib::Request&, httplib::Response &res) {
+        res.set_header("Access-Control-Allow-Methods", "POST, GET, OPTIONS");
+        res.set_header("Access-Control-Allow-Headers", "Content-Type");
+        res.set_header("Access-Control-Allow-Origin", "*");
+        res.status = 204;
+    });
 
-    svr.Get("/", [](const httplib::Request &, httplib::Response &res) {
+    // --- API Endpoints (with manual headers) ---
+
+    svr.Get("/", [](const httplib::Request&, httplib::Response &res) {
+        res.set_header("Access-Control-Allow-Origin", "*");
         res.set_content("<h1>Enigma Server is Running!</h1>", "text/html");
     });
     
     // Endpoint for user registration
     svr.Post("/register", [&](const httplib::Request &req, httplib::Response &res) {
+        res.set_header("Access-Control-Allow-Origin", "*");
         json response_json;
         try {
             json data = json::parse(req.body);
@@ -62,17 +74,16 @@ int main() {
             string password = data.at("password");
 
             if (username.empty() || password.empty()) {
-                res.status = 400; // Bad Request
+                res.status = 400;
                 response_json["status"] = "error";
                 response_json["message"] = "Username and password cannot be empty.";
                 res.set_content(response_json.dump(), "application/json");
                 return;
             }
             
-            // Check if username already exists
             for (const auto& user : users) {
                 if (user.getUsername() == username) {
-                    res.status = 409; // Conflict
+                    res.status = 409;
                     response_json["status"] = "error";
                     response_json["message"] = "Username already exists.";
                     res.set_content(response_json.dump(), "application/json");
@@ -84,13 +95,13 @@ int main() {
             users.push_back(new_user);
             saveUsersToFile();
 
-            res.status = 201; // Created
+            res.status = 201;
             response_json["status"] = "success";
             response_json["message"] = "User created successfully.";
             res.set_content(response_json.dump(), "application/json");
 
         } catch (const exception& e) {
-            res.status = 400; // Bad Request
+            res.status = 400;
             response_json["status"] = "error";
             response_json["message"] = "Invalid request: missing 'username' or 'password', or invalid JSON.";
             res.set_content(response_json.dump(), "application/json");
@@ -99,6 +110,7 @@ int main() {
 
     // Endpoint for user login
     svr.Post("/login", [&](const httplib::Request &req, httplib::Response &res) {
+        res.set_header("Access-Control-Allow-Origin", "*");
         json response_json;
         try {
             json data = json::parse(req.body);
@@ -108,13 +120,13 @@ int main() {
             for (const auto& user : users) {
                 if (user.getUsername() == username) {
                     if (user.getPasswordHash() == (password + "_hashed")) {
-                        res.status = 200; // OK
+                        res.status = 200;
                         response_json["status"] = "success";
                         response_json["message"] = "Login successful.";
                         res.set_content(response_json.dump(), "application/json");
                         return;
                     } else {
-                        res.status = 401; // Unauthorized
+                        res.status = 401;
                         response_json["status"] = "error";
                         response_json["message"] = "Invalid username or password.";
                         res.set_content(response_json.dump(), "application/json");
@@ -123,21 +135,32 @@ int main() {
                 }
             }
             
-            res.status = 404; // Not Found
+            res.status = 404;
             response_json["status"] = "error";
             response_json["message"] = "Invalid username or password.";
             res.set_content(response_json.dump(), "application/json");
 
         } catch (const exception& e) {
-            res.status = 400; // Bad Request
+            res.status = 400;
             response_json["status"] = "error";
             response_json["message"] = "Invalid request format.";
             res.set_content(response_json.dump(), "application/json");
         }
     });
+    
+    // Endpoint to get a list of all usernames
+    svr.Get("/users", [&](const httplib::Request &, httplib::Response &res) {
+        res.set_header("Access-Control-Allow-Origin", "*");
+        json user_list = json::array();
+        for(const auto& user : users) {
+            user_list.push_back(user.getUsername());
+        }
+        res.set_content(user_list.dump(), "application/json");
+    });
 
     // Endpoint to send a message
     svr.Post("/send", [&](const httplib::Request &req, httplib::Response &res) {
+        res.set_header("Access-Control-Allow-Origin", "*");
         json response_json;
         try {
             json data = json::parse(req.body);
@@ -151,26 +174,26 @@ int main() {
             for (auto& user : users) {
                 if (user.getUsername() == recipient) {
                     user.receiveMessage(new_message);
-                    saveUsersToFile(); // Save the state after a message is received
+                    saveUsersToFile();
                     recipient_found = true;
                     break;
                 }
             }
 
             if (recipient_found) {
-                res.status = 200; // OK
+                res.status = 200;
                 response_json["status"] = "success";
                 response_json["message"] = "Message sent.";
                 res.set_content(response_json.dump(), "application/json");
             } else {
-                res.status = 404; // Not Found
+                res.status = 404;
                 response_json["status"] = "error";
                 response_json["message"] = "Recipient not found.";
                 res.set_content(response_json.dump(), "application/json");
             }
 
         } catch (const exception& e) {
-            res.status = 400; // Bad Request
+            res.status = 400;
             response_json["status"] = "error";
             response_json["message"] = "Invalid request format. Requires sender, recipient, and content.";
             res.set_content(response_json.dump(), "application/json");
@@ -179,6 +202,7 @@ int main() {
 
     // Endpoint to retrieve and clear a user's messages
     svr.Get("/getMessages", [&](const httplib::Request &req, httplib::Response &res) {
+        res.set_header("Access-Control-Allow-Origin", "*");
         json response_json;
         if (!req.has_param("username")) {
             res.status = 400;
@@ -208,7 +232,7 @@ int main() {
                 res.set_content(messages_json.dump(), "application/json");
 
                 user.clearInbox();
-                saveUsersToFile(); // Save state after clearing inbox
+                saveUsersToFile();
                 break;
             }
         }
