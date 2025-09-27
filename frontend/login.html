@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enigma - Authentication</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cutive+Mono&family=Orbitron:wght@700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="login.style.css">
+</head>
+<body class="min-h-screen w-full flex items-center justify-center p-4">
+
+    <div class="enigma-frame w-full max-w-md rounded-lg p-3 flex flex-col gap-3">
+        
+        <header class="w-full text-center py-2">
+            <div class="flex items-center justify-center gap-4">
+                 <h1 class="font-enigma text-4xl title-glow tracking-widest">ENIGMA</h1>
+                <svg class="shield-icon" viewBox="0 0 100 100" aria-hidden="true">
+                    <path d="M10 10 H 25 V 20 H 40 V 10 H 60 V 20 H 75 V 10 H 90 V 50 C 90 70, 70 90, 50 90 C 30 90, 10 70, 10 50 V 10 z"></path>
+                </svg>
+            </div>
+        </header>
+
+        <main class="flex-grow flex">
+            <div class="metal-panel w-full rounded-md flex flex-col">
+                <div class="panel-screw screw-tl"></div><div class="panel-screw screw-tr"></div><div class="panel-screw screw-bl"></div><div class="panel-screw screw-br"></div>
+                
+                <div class="inner-panel rounded-sm justify-center">
+                    <h2 class="font-enigma text-xl panel-header rounded-sm tracking-wider">AUTHENTICATION</h2>
+                    
+                    <form id="login-form" class="flex flex-col gap-4 mt-2">
+                         <div>
+                            <label for="username" class="form-label block mb-1">Username</label>
+                            <input type="text" id="username" name="username" class="form-input w-full rounded-sm py-2 px-3 text-sm" placeholder="Enter your callsign...">
+                         </div>
+                        <div>
+                            <label for="password" class="form-label block mb-1">Password</label>
+                             <input type="password" id="password" name="password" class="form-input w-full rounded-sm py-2 px-3 text-sm" placeholder="Enter your passcode...">
+                        </div>
+
+                        <div id="error-container" class="error-message mt-2">
+                            </div>
+
+                        <div class="flex gap-3 mt-4">
+                            <button type="button" id="register-btn" class="form-button form-button-secondary w-full rounded px-6 py-2 font-enigma text-lg tracking-wider">REGISTER</button>
+                             <button type="submit" id="login-btn" class="form-button w-full rounded px-6 py-2 font-enigma text-lg tracking-wider">LOGIN</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="login.script.js"></script>
+</body>
+</html>
