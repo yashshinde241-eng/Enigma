@@ -1,5 +1,5 @@
 // --- 1. Constants and Global Variables ---
-const API_BASE_URL = 'http://localhost:18080';
+const API_BASE_URL = 'http://192.168.1.45:18080';
 
 // --- 2. Get References to HTML Elements ---
 const loginForm = document.getElementById('login-form');
