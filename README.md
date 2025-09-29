@@ -67,3 +67,19 @@ Retrieves all unread messages for a user and then clears their inbox.
    `cmake --build build`
 5. Run the server:
    `.\build\Debug\enigma_server.exe`
+
+### Running the Full Application
+The application requires two servers running simultaneously.
+
+Terminal 1 (Backend): Navigate to the Enigma root folder and run the C++ server.
+
+PowerShell
+
+.\backend\build\Debug\enigma_server.exe
+Terminal 2 (Frontend): Navigate to the Enigma/frontend folder and run the Python web server.
+
+PowerShell
+
+cd frontend
+python -m http.server 8000
+Access the Application: Open your web browser and go to http://localhost:8000.
